@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Dự án</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+    
+    .main-content {
+      padding: 30px;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e0e0e0;
+      flex-wrap: wrap;
+    }
+    
+    .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    .tab.active {
+      color: #1e3c72;
+      border-bottom-color: #1e3c72;
+      font-weight: bold;
+    }
+    
+    .tab:hover {
+      color: #1e3c72;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #1e3c72;
+    }
+    
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+    }
+    
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+    
+    .btn-warning {
+      background: #f39c12;
+      color: white;
+    }
+    
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .btn-info {
+      background: #3498db;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+    }
+    
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-card:nth-child(2) {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .stat-card:nth-child(3) {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .stat-card:nth-child(4) {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    .stat-card:nth-child(5) {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+    
+    .stat-card:nth-child(6) {
+      background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+    }
+    
+    .stat-card:nth-child(7) {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    }
+    
+    .stat-card:nth-child(8) {
+      background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    }
+    
+    .stat-number {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .stat-label {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+    
+    .project-list {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .project-card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 25px;
+      border-left: 5px solid #1e3c72;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .project-card.rejected {
+      border-left-color: #95a5a6;
+      background: #f5f5f5;
+      opacity: 0.8;
+    }
+    
+    .project-card.delayed {
+      border-left-color: #e74c3c;
+      background: #fff5f5;
+    }
+    
+    .project-card.warning {
+      border-left-color: #f39c12;
+      background: #fffbf0;
+    }
+    
+    .project-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .project-title {
+      font-size: 1.4em;
+      color: #333;
+      font-weight: bold;
+    }
+    
+    .project-code {
+      color: #666;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    
+    .project-status {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    
+    .status-quote { background: #fff3cd; color: #856404; }
+    .status-design { background: #e2d1f9; color: #5a2d82; }
+    .status-production { background: #cce5ff; color: #004085; }
+    .status-material { background: #ffd6cc; color: #cc5200; }
+    .status-assembly { background: #d1ecf1; color: #0c5460; }
+    .status-test { background: #fff0b3; color: #997a00; }
+    .status-delivery { background: #d4edda; color: #155724; }
+    .status-installation { background: #d1f2eb; color: #0c5460; }
+    .status-payment { background: #cfe2ff; color: #084298; }
+    .status-completed { background: #28a745; color: white; }
+    .status-rejected { background: #95a5a6; color: white; }
+    
+    .delay-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .delay-badge.critical {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .delay-badge.warning {
+      background: #f39c12;
+      color: white;
+    }
+    
+    .delay-badge.rejected {
+      background: #95a5a6;
+      color: white;
+    }
+    
+    .project-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+    }
+    
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .info-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 5px;
+    }
+    
+    .info-value {
+      font-size: 15px;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .progress-bar {
+      background: #e0e0e0;
+      height: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+      transition: width 0.3s;
+    }
+    
+    .progress-fill.delayed {
+      background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+    }
+    
+    .progress-fill.warning {
+      background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+    }
+    
+    .progress-fill.rejected {
+      background: linear-gradient(90deg, #95a5a6 0%, #7f8c8d 100%);
+    }
+    
+    .production-stages {
+      margin: 15px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+    }
+    
+    .production-stages h4 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .stage-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      margin: 5px 0;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
+    
+    .stage-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .stage-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .timeline {
+      margin: 20px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+    }
+    
+    .timeline-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .timeline-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .timeline-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    
+    .timeline-content {
+      flex: 1;
+    }
+    
+    .timeline-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .timeline-date {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .project-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      font-size: 1.5em;
+      color: #333;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+    
+    .search-filter {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .search-filter input,
+    .search-filter select {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+    
+    .empty-state-icon {
+      font-size: 4em;
+      margin-bottom: 20px;
+    }
+    
+    .money {
+      color: #27ae60;
+      font-weight: bold;
+    }
+    
+    .alert-section {
+      background: #fff3cd;
+      border-left: 5px solid #f39c12;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    
+    .alert-section.critical {
+      background: #f8d7da;
+      border-left-color: #e74c3c;
+    }
+    
+    .alert-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .days-remaining {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .days-remaining.critical {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    
+    .days-remaining.warning {
+      color: #f39c12;
+      font-weight: bold;
+    }
+    
+    .filter-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    
+    .filter-toggle label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px 15px;
+      background: #f8f9fa;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .filter-toggle label:hover {
+      background: #e9ecef;
+    }
+    
+    .filter-toggle input[type="checkbox"] {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏗️ Hệ thống Quản lý Dự án</h1>
+      <p>Quản lý toàn bộ quy trình: Báo giá → Thiết kế → Sản xuất (Đặt vật tư → Lắp đặt → Test) → Giao hàng → Thi công/Thanh toán → Hoàn thành</p>
+    </div>
+    
+    <div class="main-content">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('dashboard')">📊 Tổng quan</button>
+        <button class="tab" onclick="switchTab('monitoring')">⚠️ Giám sát tiến độ</button>
+        <button class="tab" onclick="switchTab('projects')">📋 Dự án</button>
+        <button class="tab" onclick="switchTab('rejected')">❌ Dự án bị loại</button>
+        <button class="tab" onclick="switchTab('create')">➕ Tạo dự án</button>
+        <button class="tab" onclick="switchTab('quote')">💰 Báo giá</button>
+        <button class="tab" onclick="switchTab('design')">✏️ Thiết kế</button>
+        <button class="tab" onclick="switchTab('production')">🏭 Sản xuất</button>
+        <button class="tab" onclick="switchTab('delivery')">🚚 Giao hàng</button>
+        <button class="tab" onclick="switchTab('installation')">🔧 Thi công</button>
+        <button class="tab" onclick="switchTab('payment')">💳 Thanh toán</button>
+      </div>
+      
+      <!-- Dashboard Tab -->
+      <div id="dashboard" class="tab-content active">
+        <h2 style="margin-bottom: 20px;">Thống kê tổng quan</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalProjects">0</div>
+            <div class="stat-label">Tổng dự án</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="quoteProjects">0</div>
+            <div class="stat-label">Báo giá</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="designProjects">0</div>
+            <div class="stat-label">Thiết kế</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="productionProjects">0</div>
+            <div class="stat-label">Sản xuất</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="installationProjects">0</div>
+            <div class="stat-label">Thi công</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="completedProjects">0</div>
+            <div class="stat-label">Hoàn thành</div>
+          </div>
+          <div class="stat-card" onclick="switchTab('monitoring'); document.querySelectorAll('.tab')[1].click();">
+            <div class="stat-number" id="delayedProjects">0</div>
+            <div class="stat-label">⚠️ Chậm tiến độ</div>
+          </div>
+          <div class="stat-card" onclick="switchTab('rejected'); document.querySelectorAll('.tab')[3].click();">
+            <div class="stat-number" id="rejectedProjects">0</div>
+            <div class="stat-label">❌ Bị loại</div>
+          </div>
+        </div>
+        
+        <h3 style="margin: 30px 0 20px 0;">📈 Dự án gần đây</h3>
+        <div id="recentProjects"></div>
+      </div>
+      
+      <!-- Monitoring Tab -->
+      <div id="monitoring" class="tab-content">
+        <h2 style="margin-bottom: 20px;">⚠️ Giám sát tiến độ dự án</h2>
+        
+        <div id="criticalProjects"></div>
+        <div id="warningProjects"></div>
+        <div id="onTrackProjects"></div>
+      </div>
+      
+      <!-- Projects Tab -->
+      <div id="projects" class="tab-content">
+        <h2 style="margin-bottom: 20px;">Danh sách dự án</h2>
+        
+        <div class="filter-toggle">
+          <label>
+            <input type="checkbox" id="showRejected" onchange="filterProjects()">
+            <span>Hiển thị dự án bị loại</span>
+          </label>
+        </div>
+        
+        <div class="search-filter">
+          <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm dự án..." onkeyup="filterProjects()">
+          <select id="statusFilter" onchange="filterProjects()">
+            <option value="">Tất cả trạng thái</option>
+            <option value="quote">Báo giá</option>
+            <option value="design">Thiết kế</option>
+            <option value="production">Sản xuất</option>
+            <option value="material">Đặt vật tư</option>
+            <option value="assembly">Lắp đặt</option>
+            <option value="test">Test xuất xưởng</option>
+            <option value="delivery">Giao hàng</option>
+            <option value="installation">Thi công lắp đặt</option>
+            <option value="payment">Thanh toán</option>
+            <option value="completed">Hoàn thành</option>
+            <option value="rejected">Bị loại</option>
+          </select>
+        </div>
+        <div id="projectList" class="project-list"></div>
+      </div>
+      
+      <!-- Rejected Tab -->
+      <div id="rejected" class="tab-content">
+        <h2 style="margin-bottom: 20px;">❌ Dự án bị loại</h2>
+        <p style="color: #666; margin-bottom: 20px;">Danh sách các dự án không được ký hợp đồng sau giai đoạn báo giá</p>
+        <div id="rejectedList"></div>
+      </div>
+      
+      <!-- Create Tab -->
+      <div id="create" class="tab-content">
+        <h2 style="margin-bottom: 20px;">Tạo dự án mới</h2>
+        <form id="projectForm" onsubmit="addProject(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Mã dự án *</label>
+              <input type="text" id="projectCode" required placeholder="VD: DA-2024-001">
+            </div>
+            
+            <div class="form-group">
+              <label>Tên dự án *</label>
+              <input type="text" id="projectName" required placeholder="Tên dự án">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Khách hàng *</label>
+              <input type="text" id="projectClient" required placeholder="Tên khách hàng">
+            </div>
+            
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="tel" id="projectPhone" placeholder="0123456789">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Địa chỉ dự án</label>
+            <input type="text" id="projectAddress" placeholder="Địa chỉ">
+          </div>
+          
+          <div class="form-group">
+            <label>Mô tả dự án</label>
+            <textarea id="projectDescription" placeholder="Mô tả chi tiết về dự án..."></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Giá trị dự án (VNĐ)</label>
+              <input type="number" id="projectValue" placeholder="0" min="0">
+            </div>
+            
+            <div class="form-group">
+              <label>Ngày bắt đầu *</label>
+              <input type="date" id="projectStartDate" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ngày dự kiến hoàn thành *</label>
+              <input type="date" id="projectEndDate" required>
+            </div>
+            
+            <div class="form-group">
+              <label>Người phụ trách</label>
+              <input type="text" id="projectManager" placeholder="Tên người phụ trách">
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">✅ Tạo dự án</button>
+        </form>
+      </div>
+      
+      <!-- Quote Tab -->
+      <div id="quote" class="tab-content">
+        <h2 style="margin-bottom: 20px;">💰 Quản lý Báo giá</h2>
+        <div id="quoteList"></div>
+      </div>
+      
+      <!-- Design Tab -->
+      <div id="design" class="tab-content">
+        <h2 style="margin-bottom: 20px;">✏️ Quản lý Thiết kế</h2>
+        <div id="designList"></div>
+      </div>
+      
+      <!-- Production Tab -->
+      <div id="production" class="tab-content">
+        <h2 style="margin-bottom: 20px;">🏭 Quản lý Sản xuất</h2>
+        <div id="productionList"></div>
+      </div>
+      
+      <!-- Delivery Tab -->
+      <div id="delivery" class="tab-content">
+        <h2 style="margin-bottom: 20px;">🚚 Quản lý Giao hàng</h2>
+        <div id="deliveryList"></div>
+      </div>
+      
+      <!-- Installation Tab -->
+      <div id="installation" class="tab-content">
+        <h2 style="margin-bottom: 20px;">🔧 Quản lý Thi công lắp đặt</h2>
+        <div id="installationList"></div>
+      </div>
+      
+      <!-- Payment Tab -->
+      <div id="payment" class="tab-content">
+        <h2 style="margin-bottom: 20px;">💳 Quản lý Thanh toán</h2>
+        <div id="paymentList"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal for Project Details -->
+  <div id="projectModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Chi tiết dự án</h2>
+        <button class="close-modal" onclick="closeModal()">×</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  
+  <!-- Modal for Reject Reason -->
+  <div id="rejectModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">❌ Lý do loại dự án</h2>
+        <button class="close-modal" onclick="closeRejectModal()">×</button>
+      </div>
+      <div class="form-group">
+        <label>Lý do không ký hợp đồng *</label>
+        <textarea id="rejectReason" placeholder="Nhập lý do dự án bị loại..." style="width: 100%; min-height: 120px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;"></textarea>
+      </div>
+      <div style="margin-top: 20px;">
+        <button class="btn btn-danger" onclick="confirmReject()">❌ Xác nhận loại</button>
+        <button class="btn btn-secondary" onclick="closeRejectModal()">Hủy</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    let currentRejectId = null;
+    
+    const statusMap = {
+      'quote': 'Báo giá',
+      'design': 'Thiết kế',
+      'production': 'Sản xuất',
+      'material': 'Đặt vật tư',
+      'assembly': 'Lắp đặt',
+      'test': 'Test xuất xưởng',
+      'delivery': 'Giao hàng',
+      'installation': 'Thi công lắp đặt',
+      'payment': 'Thanh toán',
+      'completed': 'Hoàn thành',
+      'rejected': 'Bị loại'
+    };
+    
+    const progressMap = {
+      'quote': 10,
+      'design': 20,
+      'production': 30,
+      'material': 40,
+      'assembly': 50,
+      'test': 60,
+      'delivery': 70,
+      'installation': 80,
+      'payment': 90,
+      'completed': 100,
+      'rejected': 0
+    };
+    
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+      
+      if (tabName === 'projects') {
+        renderProjects();
+      } else if (tabName === 'dashboard') {
+        updateDashboard();
+      } else if (tabName === 'monitoring') {
+        renderMonitoring();
+      } else if (tabName === 'rejected') {
+        renderRejectedList();
+      } else if (tabName === 'quote') {
+        renderQuoteList();
+      } else if (tabName === 'design') {
+        renderDesignList();
+      } else if (tabName === 'production') {
+        renderProductionList();
+      } else if (tabName === 'delivery') {
+        renderDeliveryList();
+      } else if (tabName === 'installation') {
+        renderInstallationList();
+      } else if (tabName === 'payment') {
+        renderPaymentList();
+      }
+    }
+    
+    function calculateDaysRemaining(endDate) {
+      if (!endDate) return null;
+      const end = new Date(endDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const diffTime = end - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+    
+    function getDelayStatus(project) {
+      if (project.status === 'completed' || project.status === 'rejected') return 'completed';
+      const daysRemaining = calculateDaysRemaining(project.endDate);
+      if (daysRemaining === null) return 'unknown';
+      if (daysRemaining < 0) return 'critical';
+      if (daysRemaining <= 3) return 'warning';
+      return 'ontrack';
+    }
+    
+    function addProject(event) {
+      event.preventDefault();
+      
+      const project = {
+        id: Date.now(),
+        code: document.getElementById('projectCode').value,
+        name: document.getElementById('projectName').value,
+        client: document.getElementById('projectClient').value,
+        phone: document.getElementById('projectPhone').value,
+        address: document.getElementById('projectAddress').value,
+        description: document.getElementById('projectDescription').value,
+        value: document.getElementById('projectValue').value,
+        startDate: document.getElementById('projectStartDate').value,
+        endDate: document.getElementById('projectEndDate').value,
+        manager: document.getElementById('projectManager').value,
+        status: 'quote',
+        rejected: false,
+        rejectReason: '',
+        productionStages: {
+          material: false,
+          assembly: false,
+          test: false
+        },
+        createdAt: new Date().toLocaleDateString('vi-VN'),
+        timeline: [
+          { stage: 'quote', date: new Date().toLocaleDateString('vi-VN'), note: 'Dự án được tạo - Giai đoạn báo giá' }
+        ]
+      };
+      
+      projects.push(project);
+      localStorage.setItem('projects', JSON.stringify(projects));
+      
+      document.getElementById('projectForm').reset();
+      alert('✅ Đã tạo dự án thành công!');
+      
+      switchTab('projects');
+      document.querySelectorAll('.tab')[2].classList.add('active');
+      document.querySelectorAll('.tab')[4].classList.remove('active');
+    }
+    
+    function renderProjects() {
+      const projectList = document.getElementById('projectList');
+      const showRejected = document.getElementById('showRejected').checked;
+      
+      let filteredProjects = showRejected ? projects : projects.filter(p => !p.rejected);
+      
+      if (filteredProjects.length === 0) {
+        projectList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <h3>Chưa có dự án nào</h3>
+            <p>Hãy tạo dự án đầu tiên của bạn!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      projectList.innerHTML = filteredProjects.map(project => renderProjectCard(project)).join('');
+    }
+    
+    function renderProjectCard(project) {
+      const progress = progressMap[project.status];
+      const delayStatus = getDelayStatus(project);
+      const daysRemaining = calculateDaysRemaining(project.endDate);
+      
+      let cardClass = 'project-card';
+      let progressClass = 'progress-fill';
+      let delayBadge = '';
+      let daysRemainingHTML = '';
+      
+      if (project.rejected) {
+        cardClass += ' rejected';
+        progressClass += ' rejected';
+        delayBadge = '<div class="delay-badge rejected">❌ Đã loại</div>';
+      } else if (delayStatus === 'critical') {
+        cardClass += ' delayed';
+        progressClass += ' delayed';
+        delayBadge = '<div class="delay-badge critical">🚨 Quá hạn</div>';
+      } else if (delayStatus === 'warning') {
+        cardClass += ' warning';
+        progressClass += ' warning';
+        delayBadge = '<div class="delay-badge warning">⚠️ Sắp hết hạn</div>';
+      }
+      
+      if (daysRemaining !== null && project.status !== 'completed' && !project.rejected) {
+        let daysClass = daysRemaining < 0 ? 'critical' : (daysRemaining <= 3 ? 'warning' : '');
+        let daysText = daysRemaining < 0 ? `Quá hạn ${Math.abs(daysRemaining)} ngày` : `Còn ${daysRemaining} ngày`;
+        daysRemainingHTML = `<div class="days-remaining ${daysClass}">⏰ ${daysText}</div>`;
+      }
+      
+      let productionStagesHTML = '';
+      
+      if (['production', 'material', 'assembly', 'test'].includes(project.status) && !project.rejected) {
+        productionStagesHTML = `
+          <div class="production-stages">
+            <h4>🏭 Giai đoạn sản xuất:</h4>
+            <div class="stage-item ${project.productionStages.material ? 'stage-completed' : ''}">
+              <input type="checkbox" class="stage-checkbox" ${project.productionStages.material ? 'checked' : ''} 
+                onchange="updateProductionStage(${project.id}, 'material', this.checked)">
+              <span>📦 Đặt vật tư</span>
+            </div>
+            <div class="stage-item ${project.productionStages.assembly ? 'stage-completed' : ''}">
+              <input type="checkbox" class="stage-checkbox" ${project.productionStages.assembly ? 'checked' : ''} 
+                onchange="updateProductionStage(${project.id}, 'assembly', this.checked)">
+              <span>🔧 Lắp đặt</span>
+            </div>
+            <div class="stage-item ${project.productionStages.test ? 'stage-completed' : ''}">
+              <input type="checkbox" class="stage-checkbox" ${project.productionStages.test ? 'checked' : ''} 
+                onchange="updateProductionStage(${project.id}, 'test', this.checked)">
+              <span>✅ Test xuất xưởng</span>
+            </div>
+          </div>
+        `;
+      }
+      
+      return `
+        <div class="${cardClass}">
+          ${delayBadge}
+          <div class="project-header">
+            <div>
+              <div class="project-title">${project.name}</div>
+              <div class="project-code">Mã: ${project.code}</div>
+              ${daysRemainingHTML}
+            </div>
+            <div class="project-status status-${project.rejected ? 'rejected' : project.status}">
+              ${project.rejected ? statusMap['rejected'] : statusMap[project.status]}
+            </div>
+          </div>
+          
+          <div class="project-info">
+            <div class="info-item">
+              <div class="info-label">Khách hàng</div>
+              <div class="info-value">👤 ${project.client}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Giá trị</div>
+              <div class="info-value money">${formatMoney(project.value)} VNĐ</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Người phụ trách</div>
+              <div class="info-value">👨‍💼 ${project.manager || 'Chưa phân công'}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Hạn hoàn thành</div>
+              <div class="info-value">📅 ${project.endDate || 'Chưa xác định'}</div>
+            </div>
+          </div>
+          
+          ${project.rejected && project.rejectReason ? `
+            <div style="margin: 15px 0; padding: 12px; background: #f8d7da; border-left: 3px solid #e74c3c; border-radius: 5px;">
+              <strong style="color: #721c24;">Lý do loại:</strong>
+              <p style="color: #721c24; margin-top: 5px;">${project.rejectReason}</p>
+            </div>
+          ` : ''}
+          
+          ${productionStagesHTML}
+          
+          <div class="progress-bar">
+            <div class="${progressClass}" style="width: ${progress}%"></div>
+          </div>
+          <div style="text-align: right; font-size: 12px; color: #888; margin-top: 5px;">
+            Tiến độ: ${progress}%
+          </div>
+          
+          <div class="project-actions">
+            <button class="btn btn-primary btn-small" onclick="viewProject(${project.id})">👁️ Chi tiết</button>
+            ${getActionButtons(project)}
+            <button class="btn btn-danger btn-small" onclick="deleteProject(${project.id})">🗑️ Xóa</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    function getActionButtons(project) {
+      if (project.rejected) {
+        return '<button class="btn btn-success btn-small" onclick="restoreProject(' + project.id + ')">↩️ Khôi phục</button>';
+      }
+      
+      const buttons = {
+        'quote': '<button class="btn btn-success btn-small" onclick="updateStatus(' + project.id + ', \'design\')">✏️ Chuyển sang Thiết kế</button>' +
+                 '<button class="btn btn-secondary btn-small" onclick="openRejectModal(' + project.id + ')">❌ Loại dự án</button>',
+        'design': '<button class="btn btn-success btn-small" onclick="updateStatus(' + project.id + ', \'production\')">🏭 Bắt đầu Sản xuất</button>',
+        'production': '<button class="btn btn-info btn-small" onclick="updateStatus(' + project.id + ', \'material\')">📦 Đặt vật tư</button>',
+        'material': '<button class="btn btn-info btn-small" onclick="updateStatus(' + project.id + ', \'assembly\')">🔧 Lắp đặt</button>',
+        'assembly': '<button class="btn btn-info btn-small" onclick="updateStatus(' + project.id + ', \'test\')">✅ Test xuất xưởng</button>',
+        'test': '<button class="btn btn-success btn-small" onclick="updateStatus(' + project.id + ', \'delivery\')">🚚 Giao hàng</button>',
+        'delivery': '<button class="btn btn-success btn-small" onclick="updateStatus(' + project.id + ', \'installation\')">🔧 Thi công</button>' +
+                    '<button class="btn btn-warning btn-small" onclick="updateStatus(' + project.id + ', \'payment\')">💳 Thanh toán</button>',
+        'installation': '<button class="btn btn-success btn-small" onclick="updateStatus(' + project.id + ', \'payment\')">💳 Thanh toán</button>',
+        'payment': '<button class="btn btn-success btn-small" onclick="updateStatus(' + project.id + ', \'completed\')">✅ Hoàn thành</button>',
+        'completed': '<button class="btn btn-success btn-small" disabled>✅ Đã hoàn thành</button>'
+      };
+      return buttons[project.status] || '';
+    }
+    
+    function openRejectModal(id) {
+      currentRejectId = id;
+      document.getElementById('rejectReason').value = '';
+      document.getElementById('rejectModal').classList.add('active');
+    }
+    
+    function closeRejectModal() {
+      currentRejectId = null;
+      document.getElementById('rejectModal').classList.remove('active');
+    }
+    
+    function confirmReject() {
+      const reason = document.getElementById('rejectReason').value.trim();
+      if (!reason) {
+        alert('⚠️ Vui lòng nhập lý do loại dự án!');
+        return;
+      }
+      
+      projects = projects.map(p => {
+        if (p.id === currentRejectId) {
+          p.rejected = true;
+          p.rejectReason = reason;
+          p.status = 'rejected';
+          p.timeline.push({
+            stage: 'rejected',
+            date: new Date().toLocaleDateString('vi-VN'),
+            note: `Dự án bị loại - Lý do: ${reason}`
+          });
+        }
+        return p;
+      });
+      
+      localStorage.setItem('projects', JSON.stringify(projects));
+      closeRejectModal();
+      renderProjects();
+      updateDashboard();
+      alert('❌ Đã đánh dấu dự án bị loại!');
+    }
+    
+    function restoreProject(id) {
+      if (confirm('Bạn có chắc muốn khôi phục dự án này?')) {
+        projects = projects.map(p => {
+          if (p.id === id) {
+            p.rejected = false;
+            p.status = 'quote';
+            p.timeline.push({
+              stage: 'quote',
+              date: new Date().toLocaleDateString('vi-VN'),
+              note: 'Dự án được khôi phục - Quay lại giai đoạn báo giá'
+            });
+          }
+          return p;
+        });
+        
+        localStorage.setItem('projects', JSON.stringify(projects));
+        renderProjects();
+        updateDashboard();
+        alert('✅ Đã khôi phục dự án!');
+      }
+    }
+    
+    function updateStatus(id, newStatus) {
+      projects = projects.map(p => {
+        if (p.id === id) {
+          p.status = newStatus;
+          p.timeline.push({
+            stage: newStatus,
+            date: new Date().toLocaleDateString('vi-VN'),
+            note: `Chuyển sang giai đoạn ${statusMap[newStatus]}`
+          });
+        }
+        return p;
+      });
+      localStorage.setItem('projects', JSON.stringify(projects));
+      renderProjects();
+      updateDashboard();
+      alert('✅ Đã cập nhật trạng thái dự án!');
+    }
+    
+    function updateProductionStage(id, stage, checked) {
+      projects = projects.map(p => {
+        if (p.id === id) {
+          p.productionStages[stage] = checked;
+          p.timeline.push({
+            stage: stage,
+            date: new Date().toLocaleDateString('vi-VN'),
+            note: `${checked ? 'Hoàn thành' : 'Hủy'} giai đoạn ${statusMap[stage]}`
+          });
+        }
+        return p;
+      });
+      localStorage.setItem('projects', JSON.stringify(projects));
+      renderProjects();
+    }
+    
+    function deleteProject(id) {
+      if (confirm('Bạn có chắc muốn xóa dự án này?')) {
+        projects = projects.filter(p => p.id !== id);
+        localStorage.setItem('projects', JSON.stringify(projects));
+        renderProjects();
+        updateDashboard();
+      }
+    }
+    
+    function viewProject(id) {
+      const project = projects.find(p => p.id === id);
+      if (!project) return;
+      
+      const delayStatus = getDelayStatus(project);
+      const daysRemaining = calculateDaysRemaining(project.endDate);
+      let statusAlert = '';
+      
+      if (project.rejected) {
+        statusAlert = `<div class="alert-section critical">
+          <div class="alert-title">❌ Dự án đã bị loại</div>
+          <p><strong>Lý do:</strong> ${project.rejectReason}</p>
+        </div>`;
+      } else if (delayStatus === 'critical') {
+        statusAlert = `<div class="alert-section critical">
+          <div class="alert-title">🚨 Dự án đã quá hạn ${Math.abs(daysRemaining)} ngày!</div>
+          <p>Cần xử lý khẩn cấp để hoàn thành dự án.</p>
+        </div>`;
+      } else if (delayStatus === 'warning') {
+        statusAlert = `<div class="alert-section">
+          <div class="alert-title">⚠️ Dự án sắp hết hạn!</div>
+          <p>Còn ${daysRemaining} ngày để hoàn thành dự án.</p>
+        </div>`;
+      }
+      
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        ${statusAlert}
+        
+        <div class="project-info">
+          <div class="info-item">
+            <div class="info-label">Mã dự án</div>
+            <div class="info-value">${project.code}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Tên dự án</div>
+            <div class="info-value">${project.name}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Khách hàng</div>
+            <div class="info-value">${project.client}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Số điện thoại</div>
+            <div class="info-value">${project.phone || 'Chưa có'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Địa chỉ</div>
+            <div class="info-value">${project.address || 'Chưa có'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Giá trị</div>
+            <div class="info-value money">${formatMoney(project.value)} VNĐ</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Người phụ trách</div>
+            <div class="info-value">${project.manager || 'Chưa phân công'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Trạng thái</div>
+            <div class="info-value">${project.rejected ? statusMap['rejected'] : statusMap[project.status]}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Ngày bắt đầu</div>
+            <div class="info-value">${project.startDate || 'Chưa có'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Hạn hoàn thành</div>
+            <div class="info-value">${project.endDate || 'Chưa có'}</div>
+          </div>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <strong>Mô tả:</strong>
+          <p style="margin-top: 10px; color: #666;">${project.description || 'Không có mô tả'}</p>
+        </div>
+        
+        ${!project.rejected ? `
+        <div class="production-stages">
+          <h4>🏭 Tiến độ sản xuất:</h4>
+          <div class="stage-item ${project.productionStages.material ? 'stage-completed' : ''}">
+            <span>${project.productionStages.material ? '✅' : '⏳'} Đặt vật tư</span>
+          </div>
+          <div class="stage-item ${project.productionStages.assembly ? 'stage-completed' : ''}">
+            <span>${project.productionStages.assembly ? '✅' : '⏳'} Lắp đặt</span>
+          </div>
+          <div class="stage-item ${project.productionStages.test ? 'stage-completed' : ''}">
+            <span>${project.productionStages.test ? '✅' : '⏳'} Test xuất xưởng</span>
+          </div>
+        </div>
+        ` : ''}
+        
+        <div class="timeline">
+          <h3 style="margin-bottom: 15px;">📅 Lịch sử dự án</h3>
+          ${project.timeline.map(item => `
+            <div class="timeline-item">
+              <div class="timeline-icon" style="background: ${item.stage === 'rejected' ? '#95a5a6' : '#1e3c72'}; color: white;">
+                ${getStageIcon(item.stage)}
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">${statusMap[item.stage] || item.stage}</div>
+                <div class="timeline-date">${item.date} - ${item.note}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      document.getElementById('projectModal').classList.add('active');
+    }
+    
+    function closeModal() {
+      document.getElementById('projectModal').classList.remove('active');
+    }
+    
+    function getStageIcon(stage) {
+      const icons = {
+        'quote': '💰',
+        'design': '✏️',
+        'production': '🏭',
+        'material': '📦',
+        'assembly': '🔧',
+        'test': '✅',
+        'delivery': '🚚',
+        'installation': '🔧',
+        'payment': '💳',
+        'completed': '✅',
+        'rejected': '❌'
+      };
+      return icons[stage] || '📌';
+    }
+    
+    function filterProjects() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const showRejected = document.getElementById('showRejected').checked;
+      
+      let filtered = projects.filter(p => {
+        if (!showRejected && p.rejected) return false;
+        
+        const matchSearch = p.name.toLowerCase().includes(searchTerm) ||
+                          p.code.toLowerCase().includes(searchTerm) ||
+                          p.client.toLowerCase().includes(searchTerm);
+        const matchStatus = !statusFilter || (p.rejected && statusFilter === 'rejected') || (!p.rejected && p.status === statusFilter);
+        return matchSearch && matchStatus;
+      });
+      
+      const projectList = document.getElementById('projectList');
+      if (filtered.length === 0) {
+        projectList.innerHTML = '<div class="empty-state"><p>Không tìm thấy dự án nào</p></div>';
+      } else {
+        projectList.innerHTML = filtered.map(project => renderProjectCard(project)).join('');
+      }
+    }
+    
+    function renderMonitoring() {
+      const activeProjects = projects.filter(p => !p.rejected);
+      const criticalProjects = activeProjects.filter(p => getDelayStatus(p) === 'critical');
+      const warningProjects = activeProjects.filter(p => getDelayStatus(p) === 'warning');
+      const onTrackProjects = activeProjects.filter(p => getDelayStatus(p) === 'ontrack' && p.status !== 'completed');
+      
+      const criticalSection = document.getElementById('criticalProjects');
+      const warningSection = document.getElementById('warningProjects');
+      const onTrackSection = document.getElementById('onTrackProjects');
+      
+      if (criticalProjects.length > 0) {
+        criticalSection.innerHTML = `
+          <div class="alert-section critical">
+            <div class="alert-title">🚨 Dự án quá hạn (${criticalProjects.length})</div>
+            <p>Các dự án sau đã quá hạn hoàn thành, cần xử lý khẩn cấp!</p>
+          </div>
+          <div class="project-list">
+            ${criticalProjects.map(p => renderProjectCard(p)).join('')}
+          </div>
+        `;
+      } else {
+        criticalSection.innerHTML = '';
+      }
+      
+      if (warningProjects.length > 0) {
+        warningSection.innerHTML = `
+          <div class="alert-section" style="margin-top: 30px;">
+            <div class="alert-title">⚠️ Dự án sắp hết hạn (${warningProjects.length})</div>
+            <p>Các dự án sau sắp đến hạn hoàn thành (còn ≤ 3 ngày)</p>
+          </div>
+          <div class="project-list">
+            ${warningProjects.map(p => renderProjectCard(p)).join('')}
+          </div>
+        `;
+      } else {
+        warningSection.innerHTML = '';
+      }
+      
+      if (onTrackProjects.length > 0) {
+        onTrackSection.innerHTML = `
+          <h3 style="margin: 30px 0 20px 0;">✅ Dự án đúng tiến độ (${onTrackProjects.length})</h3>
+          <div class="project-list">
+            ${onTrackProjects.map(p => renderProjectCard(p)).join('')}
+          </div>
+        `;
+      } else {
+        onTrackSection.innerHTML = '';
+      }
+      
+      if (criticalProjects.length === 0 && warningProjects.length === 0 && onTrackProjects.length === 0) {
+        criticalSection.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">✅</div>
+            <h3>Tất cả dự án đã hoàn thành!</h3>
+            <p>Không có dự án nào đang trong quá trình thực hiện.</p>
+          </div>
+        `;
+      }
+    }
+    
+    function renderRejectedList() {
+      const rejectedProjects = projects.filter(p => p.rejected);
+      const list = document.getElementById('rejectedList');
+      
+      if (rejectedProjects.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">✅</div>
+            <h3>Không có dự án bị loại</h3>
+            <p>Tất cả dự án báo giá đều được ký hợp đồng thành công!</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = `
+          <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <strong>Tổng số dự án bị loại:</strong> ${rejectedProjects.length}<br>
+            <strong>Tổng giá trị bị mất:</strong> 
